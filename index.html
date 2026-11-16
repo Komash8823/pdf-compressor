@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>無料PDF圧縮ツール | ブラウザ完結・レイアウト崩れなし</title>
+  <meta name="description" content="会員登録不要・完全無料のPDF圧縮Webツール。サーバーにファイルを送信せず、ブラウザ内で安全にPDFの見た目を保ったまま軽量化します。" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- PDF.js (PDFの読み込み・レンダリング用) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- jsPDF (綺麗に再構築したPDFの出力用) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <h1>無料PDF圧縮ツール</h1>
+      <p class="subtitle">サーバー送信なし・レイアウト崩れを完全に防ぎブラウザ内で安全に軽量化</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- エラー表示エリア -->
+    <div id="error-box" class="error-box hidden" role="alert"></div>
+
+    <!-- アップロードエリア -->
+    <section id="upload-section" class="card">
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-icon">📄</div>
+        <p class="drop-text">PDFファイルをここにドラッグ＆ドロップ</p>
+        <p class="drop-sub">または</p>
+        <button type="button" id="select-file-btn" class="btn btn-primary">ファイルを選択する</button>
+        <input type="file" id="file-input" accept=".pdf,application/pdf" hidden />
+        <p class="file-limit">※最大 50MB まで対応（会員登録不要・完全無料）</p>
+      </div>
+    </section>
+
+    <!-- 設定・実行エリア -->
+    <section id="settings-section" class="card hidden">
+      <div class="file-info">
+        <div class="file-name-wrap">
+          <span class="file-badge">PDF</span>
+          <span id="file-name" class="file-name">document.pdf</span>
+        </div>
+        <span id="original-size" class="file-size">0 MB</span>
+      </div>
+
+      <div class="quality-selector">
+        <label class="quality-label">圧縮・品質モードを選択：</label>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input type="radio" name="quality" value="high" />
+            <span class="radio-title">しっかり圧縮</span>
+            <span class="radio-desc">ファイルサイズを最優先で大幅に削減</span>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="quality" value="medium" checked />
+            <span class="radio-title">おすすめ（標準）</span>
+            <span class="radio-desc">綺麗さと軽さのバランス重視</span>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="quality" value="low" />
+            <span class="radio-title">高画質重視</span>
+            <span class="radio-desc">細部までくっきり綺麗に維持</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" id="compress-btn" class="btn btn-action">PDFを圧縮する</button>
+        <button type="button" id="cancel-btn" class="btn btn-text">別のファイルを選び直す</button>
+      </div>
+    </section>
+
+    <!-- 処理中エリア -->
+    <section id="progress-section" class="card hidden">
+      <div class="progress-wrap">
+        <div class="spinner"></div>
+        <p id="progress-text" class="progress-text">PDFの各ページを最適化しています...</p>
+        <div class="progress-bar-bg">
+          <div id="progress-bar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 結果表示エリア -->
+    <section id="result-section" class="card hidden">
+      <h2 class="result-title">圧縮処理が完了しました</h2>
+      <div class="result-stats">
+        <div class="stat-box">
+          <span class="stat-label">圧縮前</span>
+          <span id="res-before" class="stat-value">0 MB</span>
+        </div>
+        <div class="stat-arrow">→</div>
+        <div class="stat-box highlight">
+          <span class="stat-label">圧縮後</span>
+          <span id="res-after" class="stat-value">0 MB</span>
+        </div>
+      </div>
+      <div class="badge-wrap">
+        <span id="reduction-badge" class="reduction-badge">0% 削減</span>
+      </div>
+      <p id="result-note" class="result-note"></p>
+
+      <div class="result-actions">
+        <a id="download-btn" class="btn btn-success" download="compressed.pdf">圧縮済みPDFをダウンロード</a>
+        <button type="button" id="reset-btn" class="btn btn-secondary">続けて別のPDFを圧縮する</button>
+      </div>
+    </section>
+
+    <!-- SEO・AdSense審査用の解説コンテンツ -->
+    <section class="info-section">
+      <h2>当ツールの特徴と安全性について</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <h3>🔒 完全なプライバシー保護</h3>
+          <p>アップロードされたファイルは外部サーバーへ一切送信されません。すべてお使いの端末内で処理されるため、機密書類やチケットも安心してご利用いただけます。</p>
+        </div>
+        <div class="info-item">
+          <h3>🎨 レイアウト崩れなしの確実な圧縮</h3>
+          <p>複雑なデザインやチケット、スキャン書類も見た目を完全維持したまま綺麗に再構築するため、表示がおかしくなる心配がありません。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>※処理はすべてブラウザ内で行われ、当サイトがファイルを保存・収集することはありません。</p>
+    <p class="disclaimer">免責事項：本ツールの利用により生じたデータの損失等について、運営者は一切の責任を負いかねます。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
